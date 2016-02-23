@@ -1,5 +1,5 @@
 
-CFLAGS=-Wall
+CFLAGS=-Wall -g
 
 all: bin_search_stl bin_search_v1
 
