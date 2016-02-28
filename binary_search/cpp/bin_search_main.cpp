@@ -14,6 +14,17 @@ void assertFalse(bool actual)
     std::cout << "Test " << (!actual ? "Pass" : "FAIL") << std::endl;
 }
 
+class IncrementingSequence
+{
+public:
+    // Constructor
+    IncrementingSequence(): i_(0) {}
+    // Return an incrementing counter
+    int operator() () { return i_++; }
+private:
+    int i_;
+};
+
 // Binary search using a recursive algorithm.
 bool
 binary_search_recursive(const std::vector<int>::iterator begin,
@@ -66,22 +77,19 @@ int main()
 {
     const int data_size = 100;
     
-    // Fill a vector with some random values
+    // Fill a vector with some values
     std::vector<int> data(data_size);
-    std::generate(data.begin(), data.end(), std::rand);
+    std::generate(data.begin(), data.end(), IncrementingSequence());
     
-    // Remember the last element in the data set.
-    // This will be the target value to search for.
-    int val = data.back();
+    // Search for values in each algorithm implementation
+    assertTrue(std::binary_search(data.begin(), data.end(), 25));
+    assertFalse(std::binary_search(data.begin(), data.end(), -1));
     
-    // Sort the vector
-    std::sort(data.begin(), data.end());
-    
-    // Search for the target value in each algorithm implementation
-    assertTrue(std::binary_search(data.begin(), data.end(), val));
-    assertTrue(binary_search_recursive(data.begin(), data.end(), val));
-    assertTrue(binary_search_iterative(data.begin(), data.end(), val));
-    
+    assertTrue(binary_search_recursive(data.begin(), data.end(), 25));
+    assertFalse(binary_search_recursive(data.begin(), data.end(), -1));
+
+    assertTrue(binary_search_iterative(data.begin(), data.end(), 25));
+    assertFalse(binary_search_iterative(data.begin(), data.end(), -1));
     
     return 0;
 }
