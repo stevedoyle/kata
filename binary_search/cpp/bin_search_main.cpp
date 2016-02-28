@@ -4,14 +4,23 @@
 #include <vector>
 #include <cstdlib>
 
+static int testsPassed = 0;
+static int testsFailed = 0;
+
 void assertTrue(bool actual)
 {
-    std::cout << "Test " << (actual ? "Pass" : "FAIL") << std::endl;
+    actual ? testsPassed++ : testsFailed++;
 }
 
 void assertFalse(bool actual)
 {
-    std::cout << "Test " << (!actual ? "Pass" : "FAIL") << std::endl;
+    (!actual) ? testsPassed++ : testsFailed++;
+}
+
+void printTestResultSummary()
+{
+    std::cout << testsPassed << " Tests Passed. " <<
+        testsFailed << " Tests Failed." << std::endl;
 }
 
 class IncrementingSequence
@@ -25,16 +34,17 @@ private:
     int i_;
 };
 
+
 // Binary search using a recursive algorithm.
 bool
-binary_search_recursive(const std::vector<int>::iterator begin,
-                 const std::vector<int>::iterator end,
+binary_search_recursive(const std::vector<int>::const_iterator begin,
+                 const std::vector<int>::const_iterator end,
                  int target)
 {
     if(begin == end)
         return false;
     
-    std::vector<int>::iterator mid = begin + std::distance(begin, end)/2;
+    std::vector<int>::const_iterator mid = begin + std::distance(begin, end)/2;
     if(*mid == target) {
         return true;
     } else if(target < *mid) {
@@ -49,16 +59,16 @@ binary_search_recursive(const std::vector<int>::iterator begin,
 
 // Binary search using an iterative algorithm.
 bool
-binary_search_iterative(const std::vector<int>::iterator begin,
-                        const std::vector<int>::iterator end,
+binary_search_iterative(const std::vector<int>::const_iterator begin,
+                        const std::vector<int>::const_iterator end,
                         int target)
 {
-    std::vector<int>::iterator sub_range_begin = begin;
-    std::vector<int>::iterator sub_range_end = end;
+    std::vector<int>::const_iterator sub_range_begin = begin;
+    std::vector<int>::const_iterator sub_range_end = end;
     
     while(sub_range_begin != sub_range_end)
     {
-        std::vector<int>::iterator mid = sub_range_begin +
+        std::vector<int>::const_iterator mid = sub_range_begin +
         std::distance(sub_range_begin, sub_range_end)/2;
         
         if(*mid == target) {
@@ -71,6 +81,53 @@ binary_search_iterative(const std::vector<int>::iterator begin,
     }
     
     return false;
+}
+
+class BinarySearchAlgo
+{
+public:
+    virtual bool search(std::vector<int>::const_iterator begin,
+                        std::vector<int>::const_iterator end,
+                        int val) const = 0;
+};
+
+class STLBinarySearchAlgo : public BinarySearchAlgo
+{
+public:
+    virtual bool search(std::vector<int>::const_iterator begin,
+                        std::vector<int>::const_iterator end,
+                        int val) const
+    {
+        return std::binary_search(begin, end, val);
+    }
+};
+
+class RecursiveBinarySearchAlgo : public BinarySearchAlgo
+{
+public:
+    virtual bool search(std::vector<int>::const_iterator begin,
+                        std::vector<int>::const_iterator end,
+                        int val) const
+    {
+        return binary_search_recursive(begin, end, val);
+    }
+};
+
+class IterativeBinarySearchAlgo : public BinarySearchAlgo
+{
+public:
+    virtual bool search(std::vector<int>::const_iterator begin,
+                        std::vector<int>::const_iterator end,
+                        int val) const
+    {
+        return binary_search_iterative(begin, end, val);
+    }
+};
+
+void testBinarySearchAlgo(const std::vector<int>& data, const BinarySearchAlgo& algo)
+{
+    assertTrue(algo.search(data.begin(), data.end(), 25));
+    assertFalse(algo.search(data.begin(), data.end(), -1));
 }
 
 int main()
@@ -90,6 +147,18 @@ int main()
 
     assertTrue(binary_search_iterative(data.begin(), data.end(), 25));
     assertFalse(binary_search_iterative(data.begin(), data.end(), -1));
+    
+    // Using the strategy pattern
+    STLBinarySearchAlgo stlAlgo;
+    testBinarySearchAlgo(data, stlAlgo);
+
+    RecursiveBinarySearchAlgo recAlgo;
+    testBinarySearchAlgo(data, recAlgo);
+    
+    IterativeBinarySearchAlgo iterAlgo;
+    testBinarySearchAlgo(data, iterAlgo);
+    
+    printTestResultSummary();
     
     return 0;
 }
