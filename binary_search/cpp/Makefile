@@ -1,16 +1,10 @@
 
 CFLAGS=-Wall -g
 
-all: bin_search_stl bin_search_recursive bin_search_iterative
+all: bin_search_main
 
-bin_search_recursive:
-	g++ $(CFLAGS) bin_search_recursive.cpp -o bin_search_recursive.exe
-
-bin_search_iterative:
-	g++ $(CFLAGS) bin_search_iterative.cpp -o bin_search_iterative.exe
-
-bin_search_stl:
-	g++ $(CFLAGS) bin_search_stl.cpp -o bin_search_stl.exe
+bin_search_main:
+	g++ $(CFLAGS) bin_search_main.cpp -o bin_search_main.exe
 
 clean:
 	rm *.exe
