@@ -7,7 +7,7 @@
 // Binary search using custom algorithm.
 
 bool
-binary_search_v1(const std::vector<int>::iterator begin,
+binary_search_recursive(const std::vector<int>::iterator begin,
                  const std::vector<int>::iterator end,
                  int target)
 {
@@ -19,9 +19,9 @@ binary_search_v1(const std::vector<int>::iterator begin,
     if(*mid == target) {
         return true;
     } else if(target < *mid) {
-        return binary_search_v1(begin, mid, target);
+        return binary_search_recursive(begin, mid, target);
     } else {
-        return binary_search_v1(mid, end, target);
+        return binary_search_recursive(mid, end, target);
     }
     
     return false;
@@ -43,7 +43,7 @@ int main()
     std::sort(data.begin(), data.end());
     
     // Search for the target value
-    bool found = binary_search_v1(data.begin(), data.end(), val);
+    bool found = binary_search_recursive(data.begin(), data.end(), val);
     
     std::cout << val << (found ? " " : " not ") << "found" << std::endl;
     

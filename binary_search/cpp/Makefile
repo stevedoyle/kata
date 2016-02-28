@@ -1,10 +1,10 @@
 
 CFLAGS=-Wall -g
 
-all: bin_search_stl bin_search_v1
+all: bin_search_stl bin_search_recursive
 
-bin_search_v1:
-	g++ $(CFLAGS) bin_search_v1.cpp -o bin_search_v1.exe
+bin_search_recursive:
+	g++ $(CFLAGS) bin_search_recursive.cpp -o bin_search_recursive.exe
 
 bin_search_stl:
 	g++ $(CFLAGS) bin_search_stl.cpp -o bin_search_stl.exe
