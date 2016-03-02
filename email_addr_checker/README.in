@@ -3,4 +3,3 @@ The focus is on using regular expressions to validate email addresses in strings
 
 For a discussion on what regex should be used for email addresses, see
 http://www.regular-expressions.info/email.html and [RFC5322](http://tools.ietf.org/html/rfc5322#section-3.4)
-.
